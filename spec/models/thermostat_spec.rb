@@ -8,7 +8,7 @@ RSpec.describe Thermostat, type: :model do
   end
 
   it "is not valid without a household_token" do
-    subject.household_token = nil
+    thermostat.household_token = nil
     expect(thermostat).to_not be_valid
   end
 end

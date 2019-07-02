@@ -29,7 +29,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 gem 'json'
 gem 'redis'
-gem 'resque'
+gem 'resque', require: 'resque/server'
 gem 'resque-scheduler'
 
 group :development, :test do
