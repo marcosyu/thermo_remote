@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "required": ["reading"],
+  "properties": {
+    "reading" : {
+      "type" : "object",
+      "required" : [
+        "id",
+        "thermostat_id",
+        "tracking_number",
+        "temperature",
+        "humidity",
+        "battery_charge"
+      ],
+      "properties" : {
+        "id" : { "type" : "integer" },
+        "thermostat_id" : { "type" : "integer" },
+        "tracking_number" : { "type" : "float" },
+        "temperature" : { "type" : "float" },
+        "humidity" : { "type" : "float" },
+        "battery_charge" : { "type" : "float" },
+        "created_at" : { "type" : "string", "format": "date-time" },
+        "updated_at" : { "type" : "string", "format": "date-time" }
+      }
+    }
+  }
+}

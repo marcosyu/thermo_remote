@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "required": ["thermostat"],
+  "properties": {
+    "thermostat" : {
+      "type" : "object",
+      "required" : [
+        "household_token",
+        "id"
+      ],
+      "properties" : {
+        "id" : { "type" : "integer" },        
+        "household_token" : { "type" : "string" },
+        "location" : { "type" : "string" },
+        "created_at" : { "type" : "string", "format": "date-time" },
+        "updated_at" : { "type" : "string", "format": "date-time" }
+      }
+    }
+  }
+}

@@ -49,23 +49,12 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.3)
     byebug (11.0.1)
-    capybara (3.25.0)
-      addressable
-      mini_mime (>= 0.1.3)
-      nokogiri (~> 1.8)
-      rack (>= 1.6.0)
-      rack-test (>= 0.6.3)
-      regexp_parser (~> 1.5)
-      xpath (~> 3.2)
-    childprocess (1.0.1)
-      rake (< 13.0)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
+    diff-lcs (1.3)
     erubi (1.8.0)
     et-orbi (1.2.1)
       tzinfo
-    faraday (0.15.4)
-      multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
     fugit (1.2.2)
       et-orbi (~> 1.1, >= 1.1.8)
@@ -75,6 +64,8 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     json (2.2.0)
+    json-schema (2.8.1)
+      addressable (>= 2.4)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -94,7 +85,6 @@ GEM
     mono_logger (1.1.0)
     msgpack (1.3.0)
     multi_json (1.13.1)
-    multipart-post (2.1.1)
     mustermann (1.0.3)
     nio4r (2.3.1)
     nokogiri (1.10.3)
@@ -138,7 +128,6 @@ GEM
     redis (4.1.2)
     redis-namespace (1.6.0)
       redis (>= 3.0.4)
-    regexp_parser (1.5.1)
     resque (2.0.0)
       mono_logger (~> 1.0)
       multi_json (~> 1.0)
@@ -150,13 +139,26 @@ GEM
       redis (>= 3.3)
       resque (>= 1.26)
       rufus-scheduler (~> 3.2)
+    rspec-core (3.8.2)
+      rspec-support (~> 3.8.0)
+    rspec-expectations (3.8.4)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.8.0)
+    rspec-mocks (3.8.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.8.0)
+    rspec-rails (3.8.2)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-support (3.8.2)
     ruby_dep (1.5.0)
-    rubyzip (1.2.3)
     rufus-scheduler (3.6.0)
       fugit (~> 1.1, >= 1.1.6)
-    selenium-webdriver (3.142.3)
-      childprocess (>= 0.5, < 2.0)
-      rubyzip (~> 1.2, >= 1.2.2)
     sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -184,8 +186,6 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
-    xpath (3.2.0)
-      nokogiri (~> 1.8)
 
 PLATFORMS
   ruby
@@ -193,16 +193,15 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
-  capybara (>= 2.15)
-  faraday
   json
+  json-schema
   listen (>= 3.0.5, < 3.2)
   puma (~> 3.11)
   rails (~> 5.2.3)
   redis
   resque
   resque-scheduler
-  selenium-webdriver
+  rspec-rails
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3
