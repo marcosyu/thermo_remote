@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :thermostat do
-    id 1
-    location "location1"
-    household_token "A1B2C3D4E5"
+
+    location{ FFaker::Address.street_address }
+    household_token{ SecureRandom.hex(7) }
   end
 end

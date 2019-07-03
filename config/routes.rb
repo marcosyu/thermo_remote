@@ -1,5 +1,4 @@
-require 'resque/scheduler'
-require 'resque/scheduler/server'
+require 'resque/server'
 
 Rails.application.routes.draw do
 
@@ -7,7 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       post 'reading', to: 'reading#create'
       get 'reading', to: 'reading#show'
-      get 'stats', to: 'state#index'
+      get 'stats', to: 'stats#index'
     end
   end
 

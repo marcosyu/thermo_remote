@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'logger'
+
 RSpec.describe Api::V1::ReadingController, type: :controller do
 
   # 1. POST Reading: collects temperature, humidity and battery charge from a particular thermostat.
@@ -19,62 +19,57 @@ RSpec.describe Api::V1::ReadingController, type: :controller do
   # ● temperature (float)
   # ● humidity (float)
   # ● battery_charge (float)
-  after(:all) do
-    Resque.remove_schedule('save_reading')
-  end
 
   describe "post call for reading" do
 
+    let(:thermostat){ FactoryBot.create(:thermostat) }
+
     let (:params){
       {
-        household_token: "A1B2C3D4E5",
+        household_token: SecureRandom.hex(7),
         reading:{
-          thermostat_id: 1,
-          temperature: 25.0,
-          humidity: 5.0,
-          battery_charge: 50.0
+          thermostat_id: thermostat.id,
+          temperature: rand(20.0),
+          humidity: rand(20.0),
+          battery_charge: rand(20.0)
         }
       }
     }
 
-    let(:thermostat){ FactoryBot.create(:thermostat) }
 
     it "creates reading and return value" do
-      post :create, params: params do
-        expect(response_body).to match_response_schema("reading")
-        expect(status).to eq(200)
-      end
+      post :create, params: params
+
+      content = JSON.parse(response.body)["data"]["attributes"]
+      expect(content["tracking_number"]).to eq 1
+      expect(content["temperature"].to_f).to eq params[:reading][:temperature]
+      expect(content["humidity"].to_f).to eq params[:reading][:humidity]
+      expect(content["battery_charge"].to_f).to eq params[:reading][:battery_charge]
     end
 
-    it "is invalid with no household_token" do
-      params[:household_token] = nil
-
-      post :create, params: params do
-        expect(response_body).not_to match_response_schema("reading")
-        Rails.logger = status
-        expect(status).no_to eq(200)
-      end
-
-    end
   end
 
 
-  # describe "get call for reading" do
+  describe "get call for reading" do
 
-  #   let (:params){
-  #     {
-  #       household_token: "A1B2C3D4E5",
-  #       tracking_number: 20
-  #     }
-  #   }
+    let(:reading){ FactoryBot.create(:reading) }
 
-  #   it "returns reading for thermostat" do
+    let (:params){
+      {
+        household_token: reading.thermostat.household_token,
+        tracking_number: reading.tracking_number
+      }
+    }
 
-  #     get :show, params: params do
-  #       expect(response.body).to match_response_schema("reading")
-  #       expect(status).to eq(1)
-  #     end
+    it "returns reading for thermostat" do
+      get :show, params: params
 
-  #   end
-  # end
+      content = JSON.parse(response.body)["data"]["attributes"]
+      expect(content["tracking_number"]).to eq reading.tracking_number
+      expect(content["temperature"].to_f).to eq reading.temperature
+      expect(content["humidity"].to_f).to eq reading.humidity
+      expect(content["battery_charge"].to_f).to eq reading.battery_charge
+
+    end
+  end
 end

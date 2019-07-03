@@ -30,13 +30,15 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'json'
 gem 'redis'
 gem 'resque', require: 'resque/server'
-gem 'resque-scheduler'
-gem 'activerecord-import'
+gem 'fast_jsonapi'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec-rails'
-  gem 'factory_bot'
-  gem "json-schema"
+  gem 'factory_bot_rails'
+  gem 'ffaker'
+  gem 'shoulda-matchers'
+
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
 end
 
@@ -46,7 +48,6 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

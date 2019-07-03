@@ -6,7 +6,6 @@ namespace :resque do
     ENV['QUEUE'] = '*'
 
     Resque.redis = 'localhost:6379' unless Rails.env == 'production'
-    Resque::Scheduler.dynamic = true
 
 
 
