@@ -1,13 +1,7 @@
 require 'rails_helper'
-
-
+require 'logger'
 RSpec.describe Api::V1::ReadingController, type: :controller do
 
-  include ActiveJob::TestHelper
-
-  after do
-    clear_enqueued_jobs
-  end
   # 1. POST Reading: collects temperature, humidity and battery charge from a particular thermostat.
   # This method is going to have a very high request rate because many IoT thermostats are going to call
   # it very frequently and simultaneously. Make it as fast as possible and schedule a background job
@@ -25,38 +19,62 @@ RSpec.describe Api::V1::ReadingController, type: :controller do
   # ● temperature (float)
   # ● humidity (float)
   # ● battery_charge (float)
-  params = {
-    reading:{
-      thermostat_id: 1,
-      temperature: 25.0,
-      humidity: 5.0,
-      battery_charge: 50.0
+  after(:all) do
+    Resque.remove_schedule('save_reading')
+  end
+
+  describe "post call for reading" do
+
+    let (:params){
+      {
+        household_token: "A1B2C3D4E5",
+        reading:{
+          thermostat_id: 1,
+          temperature: 25.0,
+          humidity: 5.0,
+          battery_charge: 50.0
+        }
+      }
     }
-  }
-  it "has protected params" do
-    expect(params[:reading]).to be_truthy
-  end
 
-  it "has no tracking number" do
-    expect(params[:reading]).not_to have_key(:tracking_number)
-  end
+    let(:thermostat){ FactoryBot.create(:thermostat) }
 
-  it "has thermostat_id" do
-    expect(params[:reading]).to have_key(:thermostat_id)
-  end
+    it "creates reading and return value" do
+      post :create, params: params do
+        expect(response_body).to match_response_schema("reading")
+        expect(status).to eq(200)
+      end
+    end
 
-  thermostat= Thermostat.new(location: "loc1", household_token: "A1B2C3D4E5")
-  it "creates reading and return value" do
-    post :create, params: params do
-      expect(response_body).to match_response_schema("reading")
-      expect(status).to eq(200)
+    it "is invalid with no household_token" do
+      params[:household_token] = nil
+
+      post :create, params: params do
+        expect(response_body).not_to match_response_schema("reading")
+        Rails.logger = status
+        expect(status).no_to eq(200)
+      end
+
     end
   end
 
 
-  it 'should enque save' do
-    expect(enqueued_jobs.size).to eq(1)
-  end
+  # describe "get call for reading" do
 
+  #   let (:params){
+  #     {
+  #       household_token: "A1B2C3D4E5",
+  #       tracking_number: 20
+  #     }
+  #   }
 
+  #   it "returns reading for thermostat" do
+
+  #     get :show, params: params do
+  #       expect(response.body).to match_response_schema("reading")
+  #       expect(status).to eq(1)
+  #     end
+
+  #   end
+  # end
 end
