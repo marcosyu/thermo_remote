@@ -1,9 +1,9 @@
 class Api::V1::StatsController < ApplicationController
   def index
-    stats = ReadingQueryService.new().call
+    stats = StatQueryService.new().call
 
     if stats.present?
-      render json: StatSerializer.new(stat).serialized_json
+      render json: stats
     else
       render json: {error: "No reading for thermostat"}
 
