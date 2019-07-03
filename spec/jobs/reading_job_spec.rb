@@ -5,27 +5,32 @@ RSpec.describe ReadingJob, :type => :job do
     include ActiveJob::TestHelper
 
     after do
-      Resque.remove_schedule('save_reading')
+      clear_enqueued_jobs
     end
 
+    let(:thermostat){ FactoryBot.create(:thermostat) }
     let (:params){
       {
-        household_token: "A1B2C3D4E5",
+        household_token: SecureRandom.hex(7),
         reading:{
-          thermostat_id: 1,
-          temperature: 25.0,
-          humidity: 5.0,
-          battery_charge: 50.0
+          tracking_number: rand(20.0),
+          thermostat_id: thermostat.id,
+          temperature: rand(20.0),
+          humidity: rand(20.0),
+          battery_charge: rand(20.0)
         }
       }
     }
 
     it "schedule_save for reading" do
-      ActiveJob::Base.queue_adapter = :test
-      reading= Reading.new(params[:reading])
-      reading.schedule_save
+      ReadingJob.perform(token: params[:household_token], params: params[:reading])
 
-      expect(Resque.schedule.count).to equal(1)
+      reading = Reading.last
+      expect(reading.tracking_number).to eq params[:reading][:tracking_number]
+      expect(reading.temperature).to eq params[:reading][:temperature]
+      expect(reading.humidity).to eq params[:reading][:humidity]
+      expect(reading.battery_charge).to eq params[:reading][:battery_charge]
+      expect(reading.thermostat_id).to eq params[:reading][:thermostat_id]
     end
   end
 end
